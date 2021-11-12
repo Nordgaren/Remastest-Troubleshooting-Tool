@@ -16,6 +16,8 @@ namespace Remastest_Troubleshooting_Tool
 
         private static string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
+        private static string Downloads = $@"{UserProfile}\Downloads";
+
         public static string ExeDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
         static void Main(string[] args)
@@ -54,6 +56,9 @@ namespace Remastest_Troubleshooting_Tool
 
             var modSouls = File.Exists($@"{ExeDir}\MODSOULS.exe");
             Diagnostics.Add($"Dark Souls ModSouls Exists = {modSouls}");
+
+            var darkSoulsInputCustomizer = File.Exists($@"{ExeDir}\DarkSoulsInputCustomizer.dll");
+            Diagnostics.Add($"Dark Souls Input Customizer Exists = {darkSoulsInputCustomizer}");
 
             Diagnostics.Add("");
             Diagnostics.Add("## DarkSouls.ini ##");
@@ -96,6 +101,11 @@ namespace Remastest_Troubleshooting_Tool
                         Diagnostics.Add(line);
                 }
             }
+
+            Diagnostics.Add("");
+            Diagnostics.Add("## Downloaded Versions ##");
+            var zipFiles = Directory.GetFiles(Downloads, "Remastest*", SearchOption.AllDirectories).Where(x => x.Contains(".zip") || x.Contains(".7z")).Select(x => x.Replace(Downloads, "")).ToList();
+            Diagnostics.AddRange(zipFiles);
 
             File.WriteAllLines($@"{ExeDir}\Diagnostic.txt", Diagnostics);
         }
