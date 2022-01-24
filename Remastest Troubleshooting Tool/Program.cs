@@ -29,6 +29,7 @@ namespace Remastest_Troubleshooting_Tool
             Diagnostics.Add($"{getOSInfo()} {Environment.OSVersion.Version}");
             Diagnostics.Add("");
             Diagnostics.Add("## General: Paths and Files ##");
+
             var darkSoulsIniFolder = Directory.Exists($@"{UserProfile}\AppData\Local\NBGI\DarkSouls");
             Diagnostics.Add($"Dark Souls Ini Folder Exists = {darkSoulsIniFolder}");
 
@@ -60,10 +61,11 @@ namespace Remastest_Troubleshooting_Tool
             var darkSoulsInputCustomizer = File.Exists($@"{ExeDir}\DarkSoulsInputCustomizer.dll");
             Diagnostics.Add($"Dark Souls Input Customizer Exists = {darkSoulsInputCustomizer}");
 
-            Diagnostics.Add("");
-            Diagnostics.Add("## DarkSouls.ini ##");
+            
             if (darkSoulsIni)
             {
+                Diagnostics.Add("");
+                Diagnostics.Add("## DarkSouls.ini ##");
                 var dsIni = File.ReadAllLines(dsIniPath);
 
                 foreach (var line in dsIni)
@@ -73,12 +75,13 @@ namespace Remastest_Troubleshooting_Tool
                 }
             }
 
-            Diagnostics.Add("");
-            Diagnostics.Add("## DSFix.ini ##");
+            
             var dsFixPath = $@"{ExeDir}\DSFix.ini";
             var dsFixini = File.Exists(dsFixPath);
             if (dsFixini)
             {
+                Diagnostics.Add("");
+                Diagnostics.Add("## DSFix.ini ##");
                 var dsFix = File.ReadAllLines(dsFixPath);
 
                 foreach (var line in dsFix)
@@ -88,12 +91,13 @@ namespace Remastest_Troubleshooting_Tool
                 }
             }
 
-            Diagnostics.Add("");
-            Diagnostics.Add("## d3d9_Mod.ini ##");
+            
             var dsOverhaulPath = $@"{ExeDir}\d3d9_Mod.ini";
             var dsOverhaulini = File.Exists(dsOverhaulPath);
             if (dsOverhaulini)
             {
+                Diagnostics.Add("");
+                Diagnostics.Add("## d3d9_Mod.ini ##");
                 var dsOverhaul = File.ReadAllLines(dsOverhaulPath);
                 foreach (var line in dsOverhaul)
                 {
@@ -102,10 +106,15 @@ namespace Remastest_Troubleshooting_Tool
                 }
             }
 
-            Diagnostics.Add("");
-            Diagnostics.Add("## Downloaded Versions ##");
+           
             var zipFiles = Directory.GetFiles(Downloads, "Remastest*", SearchOption.AllDirectories).Where(x => x.Contains(".zip") || x.Contains(".7z")).Select(x => x.Replace(Downloads, "")).ToList();
-            Diagnostics.AddRange(zipFiles);
+
+            if (zipFiles.Count > 0)
+            {
+                Diagnostics.Add("");
+                Diagnostics.Add("## Downloaded Versions ##");
+                Diagnostics.AddRange(zipFiles);
+            }
 
             File.WriteAllLines($@"{ExeDir}\Diagnostic.txt", Diagnostics);
         }
